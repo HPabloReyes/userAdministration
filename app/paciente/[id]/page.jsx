@@ -1,5 +1,6 @@
-import Tarjeta from "@/app/components/tarjetaExpediente";
+import Tarjeta from "../../components/tarjetaExpediente";
 import Image from "next/image";
+import Notas from "../../components/notas";
 
 async function getData(id) {
   const res = await fetch(`http://localhost:3000/api/paciente/${id}`, {
@@ -17,6 +18,8 @@ export default async function ({ params }) {
     month: "2-digit",
     year: "numeric",
   });
+
+  const seguro = "p-3 max-w-6xl mx-auto";
 
   return (
     <div className="flex">
@@ -38,11 +41,12 @@ export default async function ({ params }) {
         </div>
         {/* <!-- Main Content --> */}
         <div className="grid grid-cols-1 gap-6 mt-4 md:grid-cols-2">
-          <Tarjeta>Añadir notas</Tarjeta>
+          <Tarjeta boton={true}>Añadir notas</Tarjeta>
           <Tarjeta>Reagendar cita</Tarjeta>
         </div>
 
         <main className="flex-1 pt-2">
+          <Notas id={expediente._id}></Notas>
           {/* <!-- Placeholder Cards --> */}
 
           <div className="flex items-center justify-center p-4 mt-4 bg-white rounded-md shadow-md">
@@ -63,11 +67,21 @@ export default async function ({ params }) {
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-6 my-4 mt-4">
-            <div className="flex items-center justify-center w-full h-56 bg-white rounded-md shadow-md">
-              <span className="text-xl tracking-wider text-gray-500 uppercase">
-                {expediente.notas}{" "}
-              </span>
-              {/* <Tarjeta data={expediente.notas}></Tarjeta> */}
+            <div>
+              {expediente.notas.map((e) => {
+                const fecha = new Date(e.fecha);
+                const dia = fecha.getDate();
+                const mes = fecha.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
+                const anio = fecha.getFullYear();
+
+                const fechaFormateada = `Fecha: ${dia}/${mes}/${anio} `;
+
+                return (
+                  <div key={e.id} className="mb-4">
+                    <Tarjeta data={e.nota}>{fechaFormateada}</Tarjeta>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </main>

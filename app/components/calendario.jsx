@@ -19,13 +19,6 @@ export default function Calendario() {
       });
   }, []);
 
-  console.log("son tus fechas", fechas);
-
-  const pureba = [
-    { title: "event 1", date: "2023-08-12" },
-    { title: "event 2", date: "2023-08-12" },
-  ];
-
   return (
     <>
       <FullCalendar

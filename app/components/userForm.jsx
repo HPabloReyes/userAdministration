@@ -1,19 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Tarjeta from "./tarjetaExpediente";
 
-export default function Usuario() {
+export default function Usuario({ usuario, plan, cita, tema, notas, tarea }) {
   const [input, setInput] = useState({
     nombre: "",
     edad: "",
     plan: "",
-    cita: "",
-    hora: "",
+    cita: [],
     tema: "",
     notas: "",
     tarea: "",
   });
   const [error, setError] = useState([]);
+  const [fechas, setFechas] = useState([]);
+  const [horaC, setHoraC] = useState([]);
 
   const handleSubmit = async (e) => {
     console.log("Este es el estado que sale ", input);
@@ -39,6 +41,27 @@ export default function Usuario() {
     console.log(input);
   };
 
+  const handleCitas = (e) => {
+    e.preventDefault();
+    setFechas(e.target.value);
+    console.log(fechas);
+  };
+
+  const handleHoras = (e) => {
+    e.preventDefault();
+    setHoraC(e.target.value);
+    console.log(horaC);
+  };
+
+  const submitCita = (e) => {
+    e.preventDefault();
+    setInput((prevInput) => ({
+      ...prevInput,
+      cita: [...prevInput.cita, { fecha: fechas, hora: horaC }],
+    }));
+    console.log(input);
+  };
+
   return (
     <div className="p-3 max-w-6xl mx-auto">
       <h1 className="text-3xl font-bold text-center">
@@ -52,7 +75,11 @@ export default function Usuario() {
         <div>
           <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
             <div class="-mx-3 md:flex mb-6">
-              <div class="md:w-1/2 px-3 mb-6 md:mb-0">
+              <div
+                className={
+                  usuario === true ? "md:w-1/2 px-3 mb-6 md:mb-0" : "hidden"
+                }
+              >
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-first-name"
@@ -68,7 +95,7 @@ export default function Usuario() {
                 />
               </div>
 
-              <div class="md:w-1/2 px-3">
+              <div className={usuario === true ? "md:w-1/2 px-3" : "hidden"}>
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-last-name"
@@ -87,7 +114,7 @@ export default function Usuario() {
             </div>
 
             <div class="-mx-3 md:flex mb-2">
-              <div class="md:w-1/2 px-3">
+              <div className={plan === true ? "md:w-1/2 px-3" : "hidden"}>
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-state"
@@ -111,7 +138,7 @@ export default function Usuario() {
                 </div>
               </div>
 
-              <div class="md:w-1/2 px-3">
+              <div className={cita === true ? "md:w-1/2 px-3" : "hidden"}>
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-zip"
@@ -120,14 +147,14 @@ export default function Usuario() {
                 </label>
                 <input
                   class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"
-                  onChange={(e) => handlechange(e)}
+                  onChange={(e) => handleCitas(e)}
                   type="date"
-                  value={input.cita}
+                  value={fechas}
                   name="cita"
                 />
               </div>
 
-              <div class="md:w-1/2 px-3 mb-6 md:mb-0">
+              <div className={cita === true ? "md:w-1/2 px-3" : "hidden"}>
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-city"
@@ -136,16 +163,22 @@ export default function Usuario() {
                 </label>
                 <input
                   class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"
-                  onChange={(e) => handlechange(e)}
+                  onChange={(e) => handleHoras(e)}
                   type="time"
                   value={input.hora}
                   name="hora"
                 />
               </div>
             </div>
+            <button
+              onClick={(e) => submitCita(e)}
+              className="bg-red-400 p-3 text-white mt-5 mb-5"
+            >
+              Añadir cita
+            </button>
 
             <div class="-mx-3 md:flex mb-2">
-              <div class="md:w-1/2 px-3">
+              <div className={tema === true ? "md:w-1/2 px-3" : "hidden"}>
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-state"
@@ -162,7 +195,11 @@ export default function Usuario() {
                 </div>
               </div>
 
-              <div class="md:w-1/2 px-3 mb-6 md:mb-0">
+              <div
+                className={
+                  tarea === true ? "md:w-1/2 px-3 mb-6 md:mb-0" : "hidden"
+                }
+              >
                 <label
                   class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
                   for="grid-city"
@@ -178,24 +215,21 @@ export default function Usuario() {
               </div>
             </div>
 
-            <div>
-              <label
-                class="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                for="grid-last-name"
-              >
-                notas
-              </label>
-              <textarea
-                class="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 h-52 resize-none"
-                onChange={(e) => handlechange(e)}
-                value={input.notas}
-                name="notas"
-              ></textarea>
-            </div>
             <button className="bg-red-400 p-3 text-white mt-5">Enviar</button>
           </div>
         </div>
       </form>
+
+      <div className="text-center">
+        <h4>Fechas del paciente</h4>
+        {input.cita.map((e, index) => (
+          <div className="" key={index}>
+            <p>Fecha: {e.fecha}</p>
+            <p>Hora: {e.hora}</p>
+            <br></br>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -15,8 +15,7 @@ export async function GET() {
 }
 
 export async function POST(req) {
-  const { nombre, edad, plan, cita, tema, notas, tarea, hora } =
-    await req.json();
+  const { nombre, edad, plan, cita, tema, tarea, hora } = await req.json();
 
   const expediente = {
     nombre,
@@ -25,10 +24,8 @@ export async function POST(req) {
     cita,
     hora,
     tema,
-    notas,
     tarea,
   };
-  //console.log("este es el mensaje", expediente);
 
   try {
     const newExpediente = new Expediente(expediente);
@@ -40,8 +37,4 @@ export async function POST(req) {
   } catch (error) {
     console.log("ERROR EN ", error);
   }
-
-  // return NextResponse.json({
-  //   msg: [`Lo que escribiste fue ${"Expediente añadido"}`],
-  // });
 }

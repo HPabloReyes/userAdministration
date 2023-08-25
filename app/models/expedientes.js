@@ -22,10 +22,18 @@ const expedienteSchema = new Schema({
     type: String,
     required: false,
   },
-  notas: {
-    type: String,
-    required: false,
-  },
+  notas: [
+    {
+      nota: {
+        type: String,
+        required: false,
+      },
+      fecha: {
+        type: Date,
+        required: false,
+      },
+    },
+  ],
   tareas: {
     type: String,
     required: false,
